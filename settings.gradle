@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "SayacApp"
+rootProject.name = "ActivityLifeCyle"
 include ':app'

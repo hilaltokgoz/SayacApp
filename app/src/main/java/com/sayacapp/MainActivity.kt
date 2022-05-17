@@ -9,12 +9,14 @@ import com.sayacapp.databinding.ActivityMainBinding
 import timber.log.Timber
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var counterTimer:CounterTimer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //Log.i("MainActivity","onCreate Çağrıldı")
         Timber.i("onCreate Çağrıldı")  //Timber Kütüphanesine Çevrilmiş Hali
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        counterTimer= CounterTimer(this.lifecycle) //tımer initialize
         var defaultValue = 0
         binding.apply {
             counterTextView.text = defaultValue.toString()
@@ -26,8 +28,8 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onStart() {
         super.onStart()
-        //  Log.i("MainActivity","onStart Çağrıldı")
-        Timber.i("onStart() Çağrıldı")
+      // counterTimer.startTimer()
+        Timber.i("onStart() Çağrıldı") //  Log.i("MainActivity","onStart Çağrıldı")
     }
     override fun onRestart() {
         super.onRestart()
@@ -43,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onStop() {
         super.onStop()
+       // counterTimer.stopTimer()
         Timber.i("onStop() Çağrıldı")
     }
     override fun onDestroy() {
