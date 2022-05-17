@@ -2,14 +2,20 @@ package com.sayacapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.sayacapp.databinding.ActivityMainBinding
 import timber.log.Timber
+//onSaveInstanceState için key tanımlama
+const val KEY_SANIYE="timer_saniye_key"
+const val KEY_SAYI="sayi_key"
+
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var counterTimer:CounterTimer
+    private var number=0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //Log.i("MainActivity","onCreate Çağrıldı")
@@ -17,12 +23,21 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         counterTimer= CounterTimer(this.lifecycle) //tımer initialize
+
         var defaultValue = 0
         binding.apply {
-            counterTextView.text = defaultValue.toString()
+            counterTextView.text=number.toString()
+            //bundle da veri var mı yok mu kontrol edilir varsa geri alınır.
+        if (savedInstanceState !=null){
+             number=savedInstanceState.getInt(KEY_SANIYE,0)
+              counterTextView.text=number.toString()
+             counterTimer.countedSeconds=savedInstanceState.getInt(KEY_SANIYE,0)
+        }
+
             counterButton.setOnClickListener {
-                defaultValue++
-                counterTextView.text = defaultValue.toString()
+                val getValue=counterTextView.text.toString().toInt()
+                number=getValue+1
+                counterTextView.text = number.toString()
             }
         }
     }
@@ -70,5 +85,14 @@ class MainActivity : AppCompatActivity() {
             R.id.shareAction -> onShare()
         }
         return super.onOptionsItemSelected(item)
+    }
+    //Verileri korumak için olışturduğumuz fonksiyondur.
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+       //Veriyi kaydetme
+        outState.putInt(KEY_SANIYE,counterTimer.countedSeconds)//key-value
+        outState.putInt(KEY_SAYI,number)
+        Timber.i(number.toString())
+        Timber.i("onSaveInstanceState çalıştı") //sayımız korundu.
     }
 }
